@@ -1,3 +1,4 @@
+
 class Hand(object):
     def __init__(self, name):
         # имя игрока
