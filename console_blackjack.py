@@ -1,6 +1,5 @@
 from Hand import Hand
 from Deck import Deck
-from Card import Card
 
 
 def new_game():

@@ -1,0 +1,8 @@
+phoenix@PC-02:~/PycharmProjects/Blackjack$ cd ~
+phoenix@PC-02:~$ git clone https://github.com/parogers/pgu
+phoenix@PC-02:~$ cd pgu/
+phoenix@PC-02:~/pgu$ sudo python3 setup.py install (sudo для Ubuntu)
+phoenix@PC-02:~/pgu$ cd docs/
+phoenix@PC-02:~/pgu/docs$ python3 build.py
+
+

@@ -5,7 +5,7 @@ class Card(object):
 
     def card_value(self):
         # Возращает очки
-        if self.rank in '10JQK':
+        if self.rank in 'TJQK':
             # По 10 за десятку, валета, даму и короля
             return 10
         else:
