@@ -2,8 +2,27 @@ import pygame
 import sys
 import os
 from Text import Text
-# TODO: установить PGU и придумать как подгрузить модули
 from pgu import gui
+
+
+class GuiWindow:
+    def __init__(self):
+        self.rect = pygame.Rect((600, 330, 175, 100))
+        self.app = app = gui.App()
+        button_hit_me = gui.Button('Hit me')
+        button_enough = gui.Button('Enough')
+        tb = gui.Table()
+        tb.tr()
+        tb.td(button_hit_me)
+        tb.tr()
+        tb.td(button_enough)
+        app.init(widget=tb, screen=screen, area=self.rect)
+
+    def event(self, event):
+        self.app.event(event)
+
+    def paint(self):
+        self.app.paint()
 
 
 def load_image(path, name, alpha_channel):
@@ -22,10 +41,12 @@ pygame.font.init()
 pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Blackjack")
 screen = pygame.display.get_surface()
-# Кнопки
-# TODO: сделать кнопки через PGU
-hit_me = load_image('Images', 'button-9096.png', 1)
-enough = load_image('Images', 'button-9267.png', 1)
+window = GuiWindow()
+
+# # Кнопки
+# hit_me = load_image('Images', 'button-9096.png', 1)
+# enough = load_image('Images', 'button-9267.png', 1)
+
 # Карты
 image_card_1 = load_image('Images/cards', 's8.png', 1)
 image_card_2 = load_image('Images/cards', 's5.png', 1)
@@ -44,7 +65,6 @@ while True:
         if e.type == pygame.KEYDOWN:  # Событие "Клавиша нажата"
             print('Key Down')
         if e.type == pygame.MOUSEBUTTONUP and e.button == 1:
-            # TODO: если не смог через PGU, то придумать как сделать без него
             mX, mY = pygame.mouse.get_pos()
             print(mX, mY)
 
@@ -55,13 +75,14 @@ while True:
     screen.blit(dealer_score.get_surface, dealer_score.get_coords)
     screen.blit(player_score.get_surface, player_score.get_coords)
 
-    # Кнопки
-    screen.blit(hit_me, (650, 400))
-    screen.blit(enough, (650, 330))
+    # # Кнопки
+    # screen.blit(hit_me, (650, 400))
+    # screen.blit(enough, (650, 330))
 
     # Карты
     screen.blit(image_card_1, (250, 350))
     screen.blit(image_card_2, (250, 110))
     screen.blit(shirt_card, (650, 110))
 
+    window.paint()
     pygame.display.flip()
