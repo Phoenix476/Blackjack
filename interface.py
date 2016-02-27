@@ -9,8 +9,22 @@ class GuiWindow:
     def __init__(self):
         self.rect = pygame.Rect((600, 330, 175, 100))
         self.app = app = gui.App()
+        self.click = 0
+
+        def click_hit():
+            CLICKED_BUTTON = 1
+            window.clicked_button(CLICKED_BUTTON)
+            print('1')
         button_hit_me = gui.Button('Hit me')
+        button_hit_me.connect(gui.CLICK, click_hit)
+
+        def click_enough():
+            CLICKED_BUTTON = 2
+            window.clicked_button(CLICKED_BUTTON)
+            print('2')
         button_enough = gui.Button('Enough')
+        button_enough.connect(gui.CLICK, click_enough)
+
         tb = gui.Table()
         tb.tr()
         tb.td(button_hit_me)
@@ -20,6 +34,9 @@ class GuiWindow:
 
     def event(self, event):
         self.app.event(event)
+
+    def clicked_button(self, CLICKED_BUTTON):
+        self.click = CLICKED_BUTTON
 
     def paint(self):
         self.app.paint()
@@ -67,6 +84,7 @@ while True:
         if e.type == pygame.MOUSEBUTTONUP and e.button == 1:
             mX, mY = pygame.mouse.get_pos()
             print(mX, mY)
+        window.event(e)
 
     screen.fill((1, 50, 32))
     # Выводит текст на экран
@@ -75,14 +93,14 @@ while True:
     screen.blit(dealer_score.get_surface, dealer_score.get_coords)
     screen.blit(player_score.get_surface, player_score.get_coords)
 
-    # # Кнопки
-    # screen.blit(hit_me, (650, 400))
-    # screen.blit(enough, (650, 330))
-
     # Карты
     screen.blit(image_card_1, (250, 350))
     screen.blit(image_card_2, (250, 110))
     screen.blit(shirt_card, (650, 110))
+    if window.click == 1:
+        screen.blit(load_image('Images/cards', 's6.png', 1), (270, 350))
+    if window.click == 2:
+        sys.exit()
 
     window.paint()
     pygame.display.flip()
