@@ -1,8 +1,13 @@
 import pygame
 import sys
-import os
+import random
+from utilites import load_image
+from Card import Card
 from Text import Text
 from pgu import gui
+
+SUITS = ('c', 's', 'd', 'h')
+RANKS = (2, 3, 4, 5, 6, 7, 8, 9, 't', 'j', 'q', 'k', 'a')
 
 
 class GuiWindow:
@@ -42,17 +47,6 @@ class GuiWindow:
         self.app.paint()
 
 
-def load_image(path, name, alpha_channel):
-    fullname = os.path.join(path, name)  # Указываем путь к папке с картинками
-    image = pygame.image.load(fullname)  # Загружаем картинку и сохраняем поверхность (Surface)
-    if alpha_channel:
-        image = image.convert_alpha()
-    else:
-        image = image.convert()
-
-    return image
-
-
 pygame.init()
 pygame.font.init()
 pygame.display.set_mode((800, 600))
@@ -60,12 +54,11 @@ pygame.display.set_caption("Blackjack")
 screen = pygame.display.get_surface()
 window = GuiWindow()
 
-# # Кнопки
-# hit_me = load_image('Images', 'button-9096.png', 1)
-# enough = load_image('Images', 'button-9267.png', 1)
 
 # Карты
-image_card_1 = load_image('Images/cards', 's8.png', 1)
+deck = []
+coords_player = [250, 350]
+# image_card_1 = load_image('Images/cards', 's8.png', 1)
 image_card_2 = load_image('Images/cards', 's5.png', 1)
 shirt_card = load_image('Images/cards', 'back.png', 1)
 
@@ -94,11 +87,15 @@ while True:
     screen.blit(player_score.get_surface, player_score.get_coords)
 
     # Карты
-    screen.blit(image_card_1, (250, 350))
+    for card in deck:
+        card[0].render(screen, card[1])
     screen.blit(image_card_2, (250, 110))
     screen.blit(shirt_card, (650, 110))
     if window.click == 1:
-        screen.blit(load_image('Images/cards', 's6.png', 1), (270, 350))
+        # Если нажата кнопка hit me, игроку добавляют ещё одну случайную карту
+        deck.append((Card(suit=random.choice(SUITS), rank=random.choice(RANKS)), coords_player))
+        coords_player = [coords_player[0]+20, coords_player[1]+0]
+        window.click = 0
     if window.click == 2:
         sys.exit()
 
