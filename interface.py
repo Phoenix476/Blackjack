@@ -1,13 +1,11 @@
 import pygame
 import sys
-import random
+# import random
 from utilites import load_image
 from Card import Card
+from Deck import Deck
 from Text import Text
 from pgu import gui
-
-SUITS = ('c', 's', 'd', 'h')
-RANKS = (2, 3, 4, 5, 6, 7, 8, 9, 't', 'j', 'q', 'k', 'a')
 
 
 class GuiWindow:
@@ -56,16 +54,19 @@ window = GuiWindow()
 
 
 # Карты
-deck = []
-coords_player = [250, 350]
-# image_card_1 = load_image('Images/cards', 's8.png', 1)
+player_cards = []
+coords_player = [254, 350]
+deck = Deck()
 image_card_2 = load_image('Images/cards', 's5.png', 1)
 shirt_card = load_image('Images/cards', 'back.png', 1)
+
+# Очки
+score_player = 0
 
 # Текст
 dealer_text = Text(14, 'Dealer', (400, 50))
 player_text = Text(14, 'Player', (400, 550))
-player_score = Text(12, "8/21", (220, 350))
+# player_score_text = Text(12, "0/21", (220, 350))
 dealer_score = Text(12, '5/21', (220, 110))
 
 while True:
@@ -84,17 +85,19 @@ while True:
     screen.blit(dealer_text.get_surface, dealer_text.get_coords)
     screen.blit(player_text.get_surface, player_text.get_coords)
     screen.blit(dealer_score.get_surface, dealer_score.get_coords)
-    screen.blit(player_score.get_surface, player_score.get_coords)
+    screen.blit(Text(12, "%s/21" % score_player, (220, 350)).get_surface,
+                Text(12, "%s/21" % score_player, (220, 350)).get_coords)
 
-    # Карты
-    for card in deck:
+    # Отрисока карт
+    for card in player_cards:
         card[0].render(screen, card[1])
     screen.blit(image_card_2, (250, 110))
     screen.blit(shirt_card, (650, 110))
     if window.click == 1:
         # Если нажата кнопка hit me, игроку добавляют ещё одну случайную карту
-        deck.append((Card(suit=random.choice(SUITS), rank=random.choice(RANKS)), coords_player))
+        player_cards.append((deck.deal_card(), coords_player))
         coords_player = [coords_player[0]+20, coords_player[1]+0]
+        score_player = sum(map(lambda card: card[0].card_value(), player_cards)) # подсчитывает очки у игрока
         window.click = 0
     if window.click == 2:
         sys.exit()
