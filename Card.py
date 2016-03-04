@@ -1,5 +1,5 @@
 from utilites import load_image
-import pygame
+import os
 
 
 class Card(object):
@@ -7,7 +7,7 @@ class Card(object):
         # Задавать масти буквами - c, d, h, s
         self.rank = rank  # Ранг карты(Туз, король и т.д.)
         self.suit = suit  # Масть карты (черви, пики и т.д.)
-        self.image = load_image(path='Images\cards', name='{}{}.png'.format(suit, rank))
+        self.image = load_image(path=os.path.join('Images', 'cards'), name='{}{}.png'.format(suit, rank))
 
     def render(self, screen, coords):
         screen.blit(self.image, coords)
