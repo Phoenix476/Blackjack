@@ -9,8 +9,8 @@ class Card(object):
         self.suit = suit  # Масть карты (черви, пики и т.д.)
         self.image = load_image(path=os.path.join('Images', 'cards'), name='{}{}.png'.format(suit, rank))
 
-    def render(self, screen, coords):
-        screen.blit(self.image, coords)
+    def render(self, screen, coord):
+        screen.blit(self.image, coord)
 
     def card_value(self):
         # Возращает очки

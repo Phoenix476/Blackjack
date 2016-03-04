@@ -1,9 +1,9 @@
 import pygame
 import sys
-# import random
+import time
 from utilites import load_image
-from Card import Card
 from Deck import Deck
+from Hand import Hand
 from Text import Text
 from pgu import gui
 
@@ -15,15 +15,15 @@ class GuiWindow:
         self.click = 0
 
         def click_hit():
-            CLICKED_BUTTON = 1
-            window.clicked_button(CLICKED_BUTTON)
+            clicked_button = 1
+            window.clicked_button(clicked_button)
             print('1')
         button_hit_me = gui.Button('Hit me')
         button_hit_me.connect(gui.CLICK, click_hit)
 
         def click_enough():
-            CLICKED_BUTTON = 2
-            window.clicked_button(CLICKED_BUTTON)
+            clicked_button = 2
+            window.clicked_button(clicked_button)
             print('2')
         button_enough = gui.Button('Enough')
         button_enough.connect(gui.CLICK, click_enough)
@@ -38,8 +38,8 @@ class GuiWindow:
     def event(self, event):
         self.app.event(event)
 
-    def clicked_button(self, CLICKED_BUTTON):
-        self.click = CLICKED_BUTTON
+    def clicked_button(self, clicked_button):
+        self.click = clicked_button
 
     def paint(self):
         self.app.paint()
@@ -54,20 +54,22 @@ window = GuiWindow()
 
 
 # Карты
-player_cards = []
-coords_player = [254, 350]
+player_hand = Hand()
+dealer_hand = Hand()
+coord_player = [254, 350]
+coord_dealer = [250, 110]
 deck = Deck()
-image_card_2 = load_image('Images/cards', 's5.png', 1)
 shirt_card = load_image('Images/cards', 'back.png', 1)
 
 # Очки
 score_player = 0
+score_dealer = 0
 
 # Текст
 dealer_text = Text(14, 'Dealer', (400, 50))
 player_text = Text(14, 'Player', (400, 550))
 # player_score_text = Text(12, "0/21", (220, 350))
-dealer_score = Text(12, '5/21', (220, 110))
+# dealer_score = Text(12, '5/21', (220, 110))
 
 while True:
     for e in pygame.event.get():
@@ -80,27 +82,35 @@ while True:
             print(mX, mY)
         window.event(e)
 
+    if window.click == 1:
+        # Если нажата кнопка hit me, игроку добавляют ещё одну случайную карту
+        player_hand.add_card(deck.deal_card(), coord_player)
+        coord_player = [coord_player[0]+20, coord_player[1]+0]
+        # score_player = sum(map(lambda card: card[0].card_value(), player_cards)) # подсчитывает очки у игрока
+        score_player = player_hand.get_value()
+        window.click = 0
+    if window.click == 2:
+        while score_dealer < 17:
+            dealer_hand.add_card(deck.deal_card(), coord_dealer)
+            score_dealer = dealer_hand.get_value()
+            coord_dealer = [coord_dealer[0]+20, coord_dealer[1]+0]
+        window.click = 0
+
     screen.fill((1, 50, 32))
     # Выводит текст на экран
     screen.blit(dealer_text.get_surface, dealer_text.get_coords)
     screen.blit(player_text.get_surface, player_text.get_coords)
-    screen.blit(dealer_score.get_surface, dealer_score.get_coords)
+
+    screen.blit(Text(12, "%s/21" % score_dealer, (220, 110)).get_surface,
+                Text(12, "%s/21" % score_dealer, (220, 110)).get_coords)
+
     screen.blit(Text(12, "%s/21" % score_player, (220, 350)).get_surface,
                 Text(12, "%s/21" % score_player, (220, 350)).get_coords)
 
     # Отрисока карт
-    for card in player_cards:
-        card[0].render(screen, card[1])
-    screen.blit(image_card_2, (250, 110))
+    player_hand.render(screen)
     screen.blit(shirt_card, (650, 110))
-    if window.click == 1:
-        # Если нажата кнопка hit me, игроку добавляют ещё одну случайную карту
-        player_cards.append((deck.deal_card(), coords_player))
-        coords_player = [coords_player[0]+20, coords_player[1]+0]
-        score_player = sum(map(lambda card: card[0].card_value(), player_cards)) # подсчитывает очки у игрока
-        window.click = 0
-    if window.click == 2:
-        sys.exit()
+    dealer_hand.render(screen)
 
     window.paint()
     pygame.display.flip()
