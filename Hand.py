@@ -2,8 +2,6 @@
 
 class Hand(object):
     def __init__(self):
-        # имя игрока
-        # self.name = name
         # Изначально рука пустая
         self.cards = []
 
@@ -19,7 +17,7 @@ class Hand(object):
         for card in self.cards:
             result += card[0].card_value()
             # Если на руке есть туз - увеличиваем количество тузов
-            if card[0].get_rank() == "A":
+            if card[0].get_rank() == "a":
                 aces += 1
         # Решаем считать тузы за 1 очко или за 11
         if result + aces * 10 <= 21:
@@ -30,9 +28,3 @@ class Hand(object):
         for card in self.cards:
             card[0].render(screen, card[1])
 
-    def __str__(self):
-        text = "%s's contains:\n" % 1   # self.name
-        for card in self.cards:
-            text += str(card[0]) + " "
-        text += "\nHand value: " + str(self.get_value())
-        return text
