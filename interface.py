@@ -14,7 +14,7 @@ ENOUGH = 2
 
 class GuiWindow:
     def __init__(self):
-        self.rect = pygame.Rect((600, 330, 175, 100))
+        self.rect = pygame.Rect((500, 330, 175, 100))
         self.app = app = gui.App()
         self.click = 0
 
@@ -57,7 +57,7 @@ screen = pygame.display.get_surface()
 window = GuiWindow()
 
 pos_player = [254, 350]
-pos_dealer = [250, 110]
+pos_dealer = [254, 110]
 
 # Карты
 player = Player(position=pos_player)
@@ -65,9 +65,6 @@ dealer = Dealer(position=pos_dealer)
 deck = Deck()
 shirt_card = load_image('Images/cards', 'back.png', 1)
 
-# Очки
-score_player = 0
-score_dealer = 0
 
 # Текст
 dealer_text = Text(14, 'Dealer', (400, 50))
