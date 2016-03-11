@@ -56,8 +56,14 @@ pygame.display.set_caption("Blackjack")
 screen = pygame.display.get_surface()
 window = GuiWindow()
 
+# Позиции
 pos_player = [254, 350]
 pos_dealer = [254, 110]
+
+in_game = True
+
+losses = 0
+winnings = 0
 
 # Карты
 player = Player(position=pos_player)
@@ -82,14 +88,25 @@ while True:
         window.event(e)
 
     if window.click == MORE:
-        # Если нажата кнопка hit me, игроку добавляют ещё одну случайную карту
-        player.update(deck)
-        window.click = STOP
+            # Если нажата кнопка hit me, игроку добавляют ещё одну случайную карту
+            player.update(deck)
+            window.click = STOP
 
     if window.click == ENOUGH:
-        # Если нажата кнопка enough, начинается раздача карт дилеру
-        dealer.update(deck)
-        window.click = STOP
+            # Если нажата кнопка enough, начинается раздача карт дилеру
+            dealer.update(deck)
+            window.click = STOP
+
+    if player.get_score() == 21:
+        winnings += 1
+        print('Выигрышей:%s' % winnings)
+        player.new_game()
+        deck.new_deck()
+    if player.get_score() > 21:
+        losses += 1
+        print('Проигрышей:%s' % losses)
+        player.new_game()
+        deck.new_deck()
 
     screen.fill((1, 50, 32))
     # Выводит текст на экран

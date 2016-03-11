@@ -5,6 +5,7 @@ class Dealer:
     def __init__(self, position):
         self.hand = Hand()
         self.pos = position
+        self.standard_pos = position
         self.score = 0
 
     def update(self, deck):
@@ -20,4 +21,9 @@ class Dealer:
     def get_score(self):
         # Возвращает очки
         return self.score
+
+    def new_game(self):
+        self.hand = Hand()
+        self.score = 0
+        self.pos = self.standard_pos
 
