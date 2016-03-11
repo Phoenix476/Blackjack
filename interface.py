@@ -21,14 +21,12 @@ class GuiWindow:
         def click_hit():
             clicked_button = MORE
             window.clicked_button(clicked_button)
-            print('1')
         button_hit_me = gui.Button('Hit me')
         button_hit_me.connect(gui.CLICK, click_hit)
 
         def click_enough():
             clicked_button = ENOUGH
             window.clicked_button(clicked_button)
-            print('2')
         button_enough = gui.Button('Enough')
         button_enough.connect(gui.CLICK, click_enough)
 
@@ -99,12 +97,12 @@ while True:
 
     if player.get_score() == 21:
         winnings += 1
-        print('Выигрышей:%s' % winnings)
+        # print('Выигрышей:%s' % winnings)
         player.new_game()
         deck.new_deck()
     if player.get_score() > 21:
         losses += 1
-        print('Проигрышей:%s' % losses)
+        # print('Проигрышей:%s' % losses)
         player.new_game()
         deck.new_deck()
 
@@ -113,11 +111,19 @@ while True:
     screen.blit(dealer_text.get_surface, dealer_text.get_coords)
     screen.blit(player_text.get_surface, player_text.get_coords)
 
+    # Вывод очков на экран
     screen.blit(Text(12, "%s/21" % dealer.get_score(), (220, 110)).get_surface,
                 Text(12, "%s/21" % dealer.get_score(), (220, 110)).get_coords)
 
     screen.blit(Text(12, "%s/21" % player.get_score(), (220, 350)).get_surface,
                 Text(12, "%s/21" % player.get_score(), (220, 350)).get_coords)
+
+    # Вывод кол-ва побед и поражений
+    screen.blit(Text(12, 'Выиграно раздач:%s' % winnings, (30, 570)).get_surface,
+                Text(12, 'Выиграно раздач:%s' % winnings, (30, 570)).get_coords)
+
+    screen.blit(Text(12, 'Проигано раздач:%s' % losses, (30, 555)).get_surface,
+                Text(12, 'Проигано раздач:%s' % losses, (30, 555)).get_coords)
 
     # Отрисока карт
     player.render(screen)
