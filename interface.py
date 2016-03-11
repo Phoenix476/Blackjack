@@ -1,11 +1,12 @@
-import pygame
 import sys
-from utilites import load_image
-from Deck import Deck
+import time
+import pygame
+from pgu import gui
 from Player import Player
 from Dealer import Dealer
+from Deck import Deck
 from Text import Text
-from pgu import gui
+from utilites import load_image
 
 STOP = 0
 MORE = 1
@@ -93,6 +94,22 @@ while True:
     if window.click == ENOUGH:
             # Если нажата кнопка enough, начинается раздача карт дилеру
             dealer.update(deck)
+            if dealer.get_score() > 21:
+                winnings += 1
+                player.new_game()
+                dealer.new_game()
+                deck.new_deck()
+            if dealer.get_score() < player.get_score():
+                winnings += 1
+                player.new_game()
+                dealer.new_game()
+                deck.new_deck()
+            if dealer.get_score() > player.get_score():
+                losses += 1
+                time.sleep(2)
+                player.new_game()
+                dealer.new_game()
+                deck.new_deck()
             window.click = STOP
 
     if player.get_score() == 21:
