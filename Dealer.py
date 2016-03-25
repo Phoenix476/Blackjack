@@ -1,4 +1,5 @@
 from Hand import Hand
+import time
 
 
 class Dealer:
@@ -22,7 +23,7 @@ class Dealer:
         # Возвращает очки
         return self.score
 
-    def new_game(self):
+    def clean_hand(self):
         self.hand = Hand()
         self.score = 0
         self.pos = self.standard_pos

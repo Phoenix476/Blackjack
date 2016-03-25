@@ -22,7 +22,7 @@ class Player:
     def render(self, screen):
         self.hand.render(screen)
 
-    def new_game(self):
+    def clean_hand(self):
         self.hand = Hand()
         self.score = 0
         self.pos = self.standard_pos
