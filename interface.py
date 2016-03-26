@@ -6,7 +6,6 @@ from Dealer import Dealer
 from Deck import Deck
 from Text import Text
 from utilites import load_image
-import time
 
 STOP = 0
 MORE = 1
@@ -114,6 +113,7 @@ while True:
             window.click = STOP
 
     while window.click == CHECK:
+        # Временная кнопка. При нажатии проверяет условия у дилера.
         if dealer.get_score() > 21:
             winnings += 1
             new_game(dealer, player, deck)
@@ -131,13 +131,13 @@ while True:
             new_game(dealer, player, deck)
             break
 
+    # FIXME: если с добавлением последней карты игроку очков становится больше, либо равно 21, последняя
+    # добавленная карта у игрока не успевает отобразиться
     if player.get_score() == 21:
         winnings += 1
-        # print('Выигрышей:%s' % winnings)
         new_game(dealer, player, deck)
     if player.get_score() > 21:
         losses += 1
-        # print('Проигрышей:%s' % losses)
         new_game(dealer, player, deck)
 
     screen.fill((1, 50, 32))
@@ -156,8 +156,15 @@ while True:
     screen.blit(Text(12, 'Выиграно раздач:%s' % winnings, (30, 570)).get_surface,
                 Text(12, 'Выиграно раздач:%s' % winnings, (30, 570)).get_coords)
 
-    screen.blit(Text(12, 'Проигано раздач:%s' % losses, (30, 555)).get_surface,
-                Text(12, 'Проигано раздач:%s' % losses, (30, 555)).get_coords)
+    screen.blit(Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_surface,
+                Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_coords)
+
+    # Ставки
+    screen.blit(Text(12, 'Бюджет: %s$' % 2000, (690, 570)).get_surface,
+                Text(12, 'Бюджет: %s$' % 2000, (690, 570)).get_coords)
+
+    # screen.blit(Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_surface,
+    #             Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_coords)
 
     # Отрисока карт
     player.render(screen)
