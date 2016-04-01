@@ -57,11 +57,23 @@ class GuiWindow:
 
 
 def new_game(dealer, player, deck):
+    # Начинает новую раздачу
     global window
     player.clean_hand()
     dealer.clean_hand()
     deck.new_deck()
     window.click = STOP
+
+
+def count_chips(bankroll):
+    # Подсчитывает кол-во фишек у игрока
+    count_1 = bankroll % 10 % 5
+    count_5 = bankroll % 10 // 5
+    count_10 = bankroll % 100 % 25 // 10
+    count_25 = bankroll % 100 // 25
+    count_100 = bankroll % 1000 // 100
+    count_1000 = bankroll // 1000
+    return count_1, count_5, count_10, count_25, count_100, count_1000
 
 
 pygame.init()
@@ -86,6 +98,8 @@ dealer = Dealer(position=pos_dealer)
 deck = Deck()
 shirt_card = load_image('Images/cards', 'back.png', 1)
 
+bankroll = 4896
+print('Кол-во фишек: 1 - %s, 5 - %s, 10 - %s, 25 - %s, 100 - %s, 1000 - %s' % count_chips(bankroll))
 
 # Текст
 dealer_text = Text(14, 'Dealer', (400, 50))
@@ -160,8 +174,8 @@ while True:
                 Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_coords)
 
     # Ставки
-    screen.blit(Text(12, 'Бюджет: %s$' % 2000, (690, 570)).get_surface,
-                Text(12, 'Бюджет: %s$' % 2000, (690, 570)).get_coords)
+    screen.blit(Text(12, 'Банкролл: %s$' % bankroll, (690, 570)).get_surface,
+                Text(12, 'Банкролл: %s$' % bankroll, (690, 570)).get_coords)
 
     # screen.blit(Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_surface,
     #             Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_coords)
