@@ -56,6 +56,68 @@ class GuiWindow:
         self.app.paint()
 
 
+class Chip:
+    def __init__(self, image, pos, value, number):
+        self.image = load_image('Images/chips', image)
+        self.pos = pos
+        self.number = number
+        self.value = value
+
+    @property
+    def text_image(self):
+        h = self.image.get_rect().h
+        w = self.image.get_rect().w
+        dx = 5
+        return Text(20, "x{}".format(self.number), (self.pos[0] + h + dx, self.pos[1]+self.pos[1]))
+
+    def render(self, screen):
+        screen.blit(self.image, self.pos)
+        screen.blit(self.text_image.get_surface, self.text_image.get_coords)
+
+
+class ChipsWindow:
+    def __init__(self):
+            self.screen = pygame.Surface((135, 380))
+            self.chips = [
+                Chip('chip1.png', (1, 1), 1, 1),
+                Chip('chip5.png', (1, 60), 5, 2),
+                Chip('chip10.png', (1, 120), 10, 1),
+                Chip('chip25.png', (1, 180), 1, 5),
+                Chip('chip100.png', (1, 240), 1, 1),
+                Chip('chip1000.png', (1, 300), 1, 1),
+            ]
+            self.chips[0].number += 10
+                # ((load_image('Images/chips', 'chip1.png'), (1, 1)),
+                #      (load_image('Images/chips', 'chip5.png'), (1, 60)),
+                #      (load_image('Images/chips', 'chip10.png'), (1, 120)),
+                #      (load_image('Images/chips', 'chip25.png'), (1, 180)),
+                #      (load_image('Images/chips', 'chip100.png'), (1, 240)),
+                #      (load_image('Images/chips', 'chip1000.png'), (1, 300)))
+            # self.text = (())
+
+    def render(self, screen):
+        self.screen.fill((1, 50, 32))
+        # Отображение фишек
+        for chip in self.chips:
+            chip.render(self.screen)
+
+        # Отображение текста
+        # self.screen.blit(Text(20, 'x%s' % 1, (100, 40)).get_surface,
+        #                  Text(20, 'x%s' % 1, (100, 40)).get_coords)
+        # self.screen.blit(Text(20, 'x%s' % 1, (100, 100)).get_surface,
+        #                  Text(20, 'x%s' % 1, (100, 100)).get_coords)
+        # self.screen.blit(Text(20, 'x%s' % 1, (100, 155)).get_surface,
+        #                  Text(20, 'x%s' % 1, (100, 155)).get_coords)
+        # self.screen.blit(Text(20, 'x%s' % 1, (100, 215)).get_surface,
+        #                  Text(20, 'x%s' % 1, (100, 215)).get_coords)
+        # self.screen.blit(Text(20, 'x%s' % 1, (100, 275)).get_surface,
+        #                  Text(20, 'x%s' % 1, (100, 275)).get_coords)
+        # self.screen.blit(Text(20, 'x%s' % 1, (100, 335)).get_surface,
+        #                  Text(20, 'x%s' % 1, (100, 335)).get_coords)
+
+        screen.blit(self.screen, (5, 80))
+
+
 def new_game(dealer, player, deck):
     # Начинает новую раздачу
     global window
@@ -82,6 +144,7 @@ pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Blackjack")
 screen = pygame.display.get_surface()
 window = GuiWindow()
+chips_window = ChipsWindow()
 
 # Позиции
 pos_player = [254, 350]
@@ -177,6 +240,7 @@ while True:
     screen.blit(Text(12, 'Банкролл: %s$' % bankroll, (690, 570)).get_surface,
                 Text(12, 'Банкролл: %s$' % bankroll, (690, 570)).get_coords)
 
+    chips_window.render(screen)
     # screen.blit(Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_surface,
     #             Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_coords)
 
