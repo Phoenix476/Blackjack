@@ -1,4 +1,4 @@
-from Hand import Hand
+from Classes.Hand import Hand
 
 
 class Player:

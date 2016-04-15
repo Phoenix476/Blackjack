@@ -1,5 +1,4 @@
-from Hand import Hand
-import time
+from Classes.Hand import Hand
 
 
 class Dealer:

@@ -1,5 +1,5 @@
-from Hand import Hand
-from Deck import Deck
+from Classes.Deck import Deck
+from Classes.Hand import Hand
 
 
 def new_game():

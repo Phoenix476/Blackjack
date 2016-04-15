@@ -1,5 +1,6 @@
-from Card import Card
 from random import shuffle
+
+from Classes.Card import Card
 
 
 class Deck(object):

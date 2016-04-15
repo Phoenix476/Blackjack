@@ -1,10 +1,12 @@
 import sys
+
 import pygame
 from pgu import gui
-from Player import Player
-from Dealer import Dealer
-from Deck import Deck
-from Text import Text
+
+from Classes.Dealer import Dealer
+from Classes.Deck import Deck
+from Classes.Player import Player
+from Classes.Text import Text
 from utilites import load_image
 
 STOP = 0
@@ -68,7 +70,7 @@ class Chip:
         h = self.image.get_rect().h
         w = self.image.get_rect().w
         dx = 5
-        return Text(20, "x{}".format(self.number), (self.pos[0] + h + dx, self.pos[1]+self.pos[1]))
+        return Text(20, "x{}".format(self.number), (self.pos[0] + h + dx, self.pos[1] + w/3))
 
     def render(self, screen):
         screen.blit(self.image, self.pos)
@@ -87,34 +89,27 @@ class ChipsWindow:
                 Chip('chip1000.png', (1, 300), 1, 1),
             ]
             self.chips[0].number += 10
-                # ((load_image('Images/chips', 'chip1.png'), (1, 1)),
-                #      (load_image('Images/chips', 'chip5.png'), (1, 60)),
-                #      (load_image('Images/chips', 'chip10.png'), (1, 120)),
-                #      (load_image('Images/chips', 'chip25.png'), (1, 180)),
-                #      (load_image('Images/chips', 'chip100.png'), (1, 240)),
-                #      (load_image('Images/chips', 'chip1000.png'), (1, 300)))
-            # self.text = (())
+
+    def count_chips(self, bankroll):
+        # Подсчитывает кол-во фишек у игрока
+        count_1 = bankroll % 10 % 5
+        count_5 = bankroll % 10 // 5
+        count_10 = bankroll % 100 % 25 // 10
+        count_25 = bankroll % 100 // 25
+        count_100 = bankroll % 1000 // 100
+        count_1000 = bankroll // 1000
+        return count_1, count_5, count_10, count_25, count_100, count_1000
+
+    def update(self, count):
+        count = count
+        for chip in self.chips:
+            self.chips[self.chips.index(chip)].number = count[self.chips.index(chip)]
 
     def render(self, screen):
         self.screen.fill((1, 50, 32))
         # Отображение фишек
         for chip in self.chips:
             chip.render(self.screen)
-
-        # Отображение текста
-        # self.screen.blit(Text(20, 'x%s' % 1, (100, 40)).get_surface,
-        #                  Text(20, 'x%s' % 1, (100, 40)).get_coords)
-        # self.screen.blit(Text(20, 'x%s' % 1, (100, 100)).get_surface,
-        #                  Text(20, 'x%s' % 1, (100, 100)).get_coords)
-        # self.screen.blit(Text(20, 'x%s' % 1, (100, 155)).get_surface,
-        #                  Text(20, 'x%s' % 1, (100, 155)).get_coords)
-        # self.screen.blit(Text(20, 'x%s' % 1, (100, 215)).get_surface,
-        #                  Text(20, 'x%s' % 1, (100, 215)).get_coords)
-        # self.screen.blit(Text(20, 'x%s' % 1, (100, 275)).get_surface,
-        #                  Text(20, 'x%s' % 1, (100, 275)).get_coords)
-        # self.screen.blit(Text(20, 'x%s' % 1, (100, 335)).get_surface,
-        #                  Text(20, 'x%s' % 1, (100, 335)).get_coords)
-
         screen.blit(self.screen, (5, 80))
 
 
@@ -125,17 +120,6 @@ def new_game(dealer, player, deck):
     dealer.clean_hand()
     deck.new_deck()
     window.click = STOP
-
-
-def count_chips(bankroll):
-    # Подсчитывает кол-во фишек у игрока
-    count_1 = bankroll % 10 % 5
-    count_5 = bankroll % 10 // 5
-    count_10 = bankroll % 100 % 25 // 10
-    count_25 = bankroll % 100 // 25
-    count_100 = bankroll % 1000 // 100
-    count_1000 = bankroll // 1000
-    return count_1, count_5, count_10, count_25, count_100, count_1000
 
 
 pygame.init()
@@ -150,8 +134,6 @@ chips_window = ChipsWindow()
 pos_player = [254, 350]
 pos_dealer = [254, 110]
 
-in_game = True
-
 losses = 0
 winnings = 0
 
@@ -162,8 +144,7 @@ deck = Deck()
 shirt_card = load_image('Images/cards', 'back.png', 1)
 
 bankroll = 4896
-print('Кол-во фишек: 1 - %s, 5 - %s, 10 - %s, 25 - %s, 100 - %s, 1000 - %s' % count_chips(bankroll))
-
+chips_window.update(chips_window.count_chips(bankroll))
 # Текст
 dealer_text = Text(14, 'Dealer', (400, 50))
 player_text = Text(14, 'Player', (400, 550))
@@ -241,8 +222,6 @@ while True:
                 Text(12, 'Банкролл: %s$' % bankroll, (690, 570)).get_coords)
 
     chips_window.render(screen)
-    # screen.blit(Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_surface,
-    #             Text(12, 'Проиграно раздач:%s' % losses, (30, 555)).get_coords)
 
     # Отрисока карт
     player.render(screen)
