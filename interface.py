@@ -15,6 +15,34 @@ ENOUGH = 2
 CHECK = 3
 
 
+class BetWindow:
+    # Окно для ввода ставок
+    def __init__(self):
+        self.rect = pygame.Rect((10, 520, 300, 25))
+        self.app = app = gui.App()
+
+        def click_put():
+            print('put')
+        button_bet = gui.Button('Put')
+        button_bet.connect(gui.CLICK, click_put)
+        label = gui.Label('Bet: ')
+        input_bet = gui.Input()
+        tb = gui.Table()
+
+        tb.tr()
+        tb.td(label)
+        tb.td(input_bet)
+        tb.td(button_bet)
+
+        app.init(widget=tb, screen=screen, area=self.rect)
+
+    def event(self, event):
+        self.app.event(event)
+
+    def paint(self):
+        self.app.paint()
+
+
 class GuiWindow:
     def __init__(self):
         self.rect = pygame.Rect((500, 330, 175, 100))
@@ -128,6 +156,7 @@ pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Blackjack")
 screen = pygame.display.get_surface()
 window = GuiWindow()
+bet_window = BetWindow()
 chips_window = ChipsWindow()
 
 # Позиции
@@ -159,6 +188,7 @@ while True:
             mX, mY = pygame.mouse.get_pos()
             print(mX, mY)
         window.event(e)
+        bet_window.event(e)
 
     if window.click == MORE:
             # Если нажата кнопка hit me, игроку добавляют ещё одну случайную карту
@@ -229,4 +259,5 @@ while True:
     screen.blit(shirt_card, (650, 110))
 
     window.paint()
+    bet_window.paint()
     pygame.display.flip()
