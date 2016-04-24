@@ -16,7 +16,8 @@ class Dealer:
             self.pos = [self.pos[0]+20, self.pos[1]+0]
 
     def render(self, screen):
-        self.hand.render(screen)
+        for card in self.hand.cards:
+            card[0].render(screen, card[1])
 
     def get_score(self):
         # Возвращает очки

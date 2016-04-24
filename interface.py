@@ -1,6 +1,7 @@
 import sys
-
+import threading
 import pygame
+import time
 from pgu import gui
 
 from Classes.Dealer import Dealer
@@ -12,7 +13,8 @@ from utilites import load_image
 STOP = 0
 MORE = 1
 ENOUGH = 2
-CHECK = 3
+THREAD_RUN = 3
+CHECK = 4
 
 
 class BetWindow:
@@ -61,19 +63,11 @@ class GuiWindow:
         button_enough = gui.Button('Enough')
         button_enough.connect(gui.CLICK, click_enough)
 
-        def click_check():
-            clicked_button = CHECK
-            window.clicked_button(clicked_button)
-        button_check = gui.Button('Check')
-        button_check.connect(gui.CLICK, click_check)
-
         tb = gui.Table()
         tb.tr()
         tb.td(button_hit_me)
         tb.tr()
         tb.td(button_enough)
-        tb.tr()
-        tb.td(button_check)
         app.init(widget=tb, screen=screen, area=self.rect)
 
     def event(self, event):
@@ -150,6 +144,34 @@ def new_game(dealer, player, deck):
     window.click = STOP
 
 
+def conditions():
+    global winnings, losses, deck, dealer, player
+    # Условия на проигрышь или выигрышь
+    if dealer.get_score() > 21:
+        winnings += 1
+        new_game(dealer, player, deck)
+    if dealer.get_score() < player.get_score():
+        winnings += 1
+        new_game(dealer, player, deck)
+    if dealer.get_score() > player.get_score():
+        losses += 1
+        new_game(dealer, player, deck)
+    if dealer.get_score() == player.get_score():
+        losses += 1
+        new_game(dealer, player, deck)
+    new_game(dealer, player, deck)
+
+
+def dealer_render():
+    global deck, window, dealer, screen
+    window.click = THREAD_RUN
+    dealer.update(deck)
+    while True:
+        dealer.render(screen)
+        time.sleep(0.02)
+        # TODO: нужен таймер, который по истечению 3 секунд прерывает цикл
+    window.click = CHECK
+
 pygame.init()
 pygame.font.init()
 pygame.display.set_mode((800, 600))
@@ -171,6 +193,10 @@ player = Player(position=pos_player)
 dealer = Dealer(position=pos_dealer)
 deck = Deck()
 shirt_card = load_image('Images/cards', 'back.png', 1)
+
+# Потоки
+th1 = threading.Thread(target=dealer_render)
+th2 = threading.Thread(target=conditions)
 
 bankroll = 4896
 chips_window.update(chips_window.count_chips(bankroll))
@@ -197,27 +223,13 @@ while True:
 
     if window.click == ENOUGH:
             # Если нажата кнопка enough, начинается раздача карт дилеру
-            dealer.update(deck)
-            window.click = STOP
+            th1.start()
 
-    while window.click == CHECK:
-        # Временная кнопка. При нажатии проверяет условия у дилера.
-        if dealer.get_score() > 21:
-            winnings += 1
-            new_game(dealer, player, deck)
-            break
-        if dealer.get_score() < player.get_score():
-            winnings += 1
-            new_game(dealer, player, deck)
-            break
-        if dealer.get_score() > player.get_score():
-            losses += 1
-            new_game(dealer, player, deck)
-            break
-        if dealer.get_score() == player.get_score():
-            losses += 1
-            new_game(dealer, player, deck)
-            break
+    if window.click == THREAD_RUN:
+        if window.click == CHECK:
+            th2.start()
+            th1.join()
+            th2.join()
 
     # FIXME: если с добавлением последней карты игроку очков становится больше, либо равно 21, последняя
     # добавленная карта у игрока не успевает отобразиться
@@ -255,7 +267,6 @@ while True:
 
     # Отрисока карт
     player.render(screen)
-    dealer.render(screen)
     screen.blit(shirt_card, (650, 110))
 
     window.paint()
