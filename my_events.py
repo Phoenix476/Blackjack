@@ -1,0 +1,4 @@
+from pygame import *
+
+PLAYER_ADD_CARD = USEREVENT + 1
+DEALER_ADD_CARDS = USEREVENT + 2

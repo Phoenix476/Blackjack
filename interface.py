@@ -172,6 +172,11 @@ def dealer_render():
         # TODO: нужен таймер, который по истечению 3 секунд прерывает цикл
     window.click = CHECK
 
+
+def timer():
+    print('time')
+
+
 pygame.init()
 pygame.font.init()
 pygame.display.set_mode((800, 600))
@@ -194,9 +199,10 @@ dealer = Dealer(position=pos_dealer)
 deck = Deck()
 shirt_card = load_image('Images/cards', 'back.png', 1)
 
-# Потоки
-th1 = threading.Thread(target=dealer_render)
-th2 = threading.Thread(target=conditions)
+# # Потоки
+# th1 = threading.Thread(target=dealer_render)
+# th2 = threading.Thread(target=conditions)
+
 
 bankroll = 4896
 chips_window.update(chips_window.count_chips(bankroll))
