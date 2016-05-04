@@ -1,10 +1,11 @@
 from utilites import load_image
 from Classes.Text import Text
+import os
 
 
 class Chip:
-    def __init__(self, image, pos, value, number):
-        self.image = load_image('Images/chips', image)
+    def __init__(self, pos, value, number):
+        self.image = load_image(path=os.path.join('Images', 'chips'), name='chip{}.png'.format(value))
         self.pos = pos
         self.number = number
         self.value = value
