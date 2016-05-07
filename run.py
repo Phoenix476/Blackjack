@@ -8,6 +8,7 @@ from Classes.Player import Player
 from Classes.ChipsWindow import ChipsWindow
 from Classes.ChoiceForm import ChoiceForm
 from Classes.StatusWindow import StatusWindow
+from Classes.BetForm import BetForm
 
 
 def new_game(stat):
@@ -43,6 +44,7 @@ dealer.set_deck(deck)
 
 chips = ChipsWindow()
 choice = ChoiceForm(screen)
+bets = BetForm(screen)
 status = StatusWindow(screen)
 
 player.add_card(deck)
@@ -57,6 +59,7 @@ while True:
             mX, mY = pygame.mouse.get_pos()
             print(mX, mY)
         choice.event(e)
+        bets.event(e)
         player.event(e)
         dealer.event(e)
         status.event(e)
@@ -66,6 +69,7 @@ while True:
     dealer.render(screen)
     deck.render(screen)
     chips.render(screen)
+    bets.paint()
     choice.paint()
 
     pygame.display.flip()
