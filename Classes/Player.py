@@ -4,7 +4,7 @@ from Classes.Text import Text
 
 
 class Player:
-    def __init__(self, position, name="no name"):
+    def __init__(self, position, name="Player"):
         self.name = name
         self.pos = position
         self.dx = 20
@@ -33,6 +33,7 @@ class Player:
     def render(self, screen):
         self.hand.render(screen)
         screen.blit(self.text_score.get_surface, self.text_score.get_coords)
+        screen.blit(self.text_name.get_surface, self.text_name.get_coords)
 
     def clean_hand(self):
         self.hand = Hand()
@@ -44,3 +45,8 @@ class Player:
         dx = 50
         return Text(12, "21/{}".format(self.score), (self.standard_pos[0] - dx, self.standard_pos[1]))
 
+    @property
+    def text_name(self):
+        dx = 90
+        dy = 130
+        return Text(14, self.name, (self.standard_pos[0] + dx, self.standard_pos[1] + dy))

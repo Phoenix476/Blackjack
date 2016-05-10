@@ -12,11 +12,16 @@ from Classes.BetForm import BetForm
 
 
 def new_game(stat):
-    status.set_status(stat)
-    status.render(screen)
+    # status.set_status(stat)
+    # status.render(screen)
     clock = pygame.time.Clock()
     clock.tick(3)
     # 1 - выигрышь, 0 - проигрышь
+    bets.status = stat
+    bets.change_count_chips()
+    if bets.status is not None:
+        chips.number_chips = list(map(lambda x, y: x+y, chips.number_chips, bets.number_chips))
+        chips.update()
     # Начинает новую раздачу
     player.clean_hand()
     dealer.clean_hand()
@@ -36,15 +41,17 @@ pos_deck = [650, 110]
 
 deck = Deck(pos_deck)
 
+bankroll = 3000
+
 player = Player(pos_player)
 player.set_deck(deck)
 
 dealer = Dealer(pos_dealer)
 dealer.set_deck(deck)
 
-chips = ChipsWindow()
+chips = ChipsWindow(bankroll)
 choice = ChoiceForm(screen)
-bets = BetForm(screen)
+bets = BetForm(screen, bankroll)
 status = StatusWindow(screen)
 
 player.add_card(deck)
@@ -79,14 +86,13 @@ while True:
     if player.get_score() > 21:
         new_game(0)
     if dealer.get_score() >= 17:
-        print(dealer.get_score())
         if dealer.get_score() > 21:
             new_game(1)
-        if dealer.get_score() == 21:
+        elif dealer.get_score() == 21:
             new_game(0)
-        if dealer.get_score() > player.get_score():
+        elif dealer.get_score() > player.get_score():
             new_game(0)
-        if dealer.get_score() == player.get_score():
+        elif dealer.get_score() == player.get_score():
             new_game(0)
-        if dealer.get_score() < player.get_score():
+        elif dealer.get_score() < player.get_score():
             new_game(1)

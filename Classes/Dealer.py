@@ -21,6 +21,7 @@ class Dealer:
     def render(self, screen):
         self.hand.render(screen)
         screen.blit(self.text_score.get_surface, self.text_score.get_coords)
+        screen.blit(self.text_name.get_surface, self.text_name.get_coords)
 
     def event(self, event):
         if event.type == DEALER_ADD_CARDS:
@@ -42,5 +43,11 @@ class Dealer:
     def text_score(self):
         dx = 50
         return Text(12, "21/{}".format(self.score), (self.standard_pos[0] - dx, self.standard_pos[1]))
+
+    @property
+    def text_name(self):
+        dx = 90
+        dy = 60
+        return Text(14, 'Dealer', (self.standard_pos[0] + dx, self.standard_pos[1] - dy))
 
 
