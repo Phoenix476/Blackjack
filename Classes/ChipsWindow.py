@@ -1,11 +1,12 @@
 from Classes.Chip import Chip
 from Functions.ParseOnChips import parse_on_chips
+from Classes.Text import Text
 import pygame
 
 
 class ChipsWindow:
     def __init__(self, bankroll=2000):
-            self.screen = pygame.Surface((135, 380))
+            self.screen = pygame.Surface((200, 450))
             self.bankroll = bankroll
             self.number_chips = list(parse_on_chips(self.bankroll))
             self.chips = [
@@ -26,4 +27,12 @@ class ChipsWindow:
         # Отображение фишек
         for chip in self.chips:
             chip.render(self.screen)
+        self.screen.blit(self.text_bankroll.get_surface, self.text_bankroll.get_coords)
         screen.blit(self.screen, (5, 80))
+
+    def change_bankroll(self):
+        self.bankroll = sum(list([chip.number * chip.value for chip in self.chips]))
+
+    @property
+    def text_bankroll(self):
+        return Text(15, 'Bankroll: {}$'.format(self.bankroll), (1, 400))

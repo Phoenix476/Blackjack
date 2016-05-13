@@ -1,5 +1,5 @@
 def parse_on_chips(bankroll):
-    # Подсчитывает кол-во фишек с банкролла
+    # Разбивает деньги на фишки
     bankroll -= 1
     count_1 = (bankroll % 10 % 5)+1
     count_5 = bankroll % 10 // 5

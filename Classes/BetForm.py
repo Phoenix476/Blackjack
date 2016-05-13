@@ -1,6 +1,7 @@
 import pygame
 from pgu import gui
 from Functions.ParseOnChips import parse_on_chips
+from my_events import *
 
 BET_MADE = 2
 WIN = 1
@@ -11,7 +12,7 @@ class BetForm:
     # Окно для ввода ставок
 
     def __init__(self, screen, bankroll=2000):
-        self.rect = pygame.Rect((10, 520, 300, 25))
+        self.rect = pygame.Rect((10, 520, 350, 50))
         self.app = app = gui.App()
         self.bet = 0
         self.bankroll = bankroll
@@ -20,7 +21,7 @@ class BetForm:
 
         button_bet = gui.Button('Put')
         button_bet.connect(gui.CLICK, self.click_put)
-        label = gui.Label('Bet: ')
+        label = gui.Label('Enter a bet: ')
         self.input_bet = gui.Input()
         tb = gui.Table()
 
@@ -36,6 +37,7 @@ class BetForm:
             self.bet = self.input_bet.value
             self.input_bet.value = ''
             try:
+                # Проверяет, введено ли число.
                 self.bet = int(self.bet)
             except ValueError:
                 self.bet = 0
@@ -49,18 +51,20 @@ class BetForm:
                 print('Сделайте ставку')
             self.number_chips = list(parse_on_chips(self.bet))
             self.status = BET_MADE
-        else:
-            print('Ставка сделана, завершите игру, чтобы сделать новую стаку')
+        # else:
+        #     print('Ставка сделана, завершите игру, чтобы сделать новую стаку')
 
     def change_count_chips(self):
         if self.number_chips is not None:
             if self.status == WIN:
+                # При выиграше удваивает ставку
                 self.number_chips = list(map(lambda x: x*2, self.number_chips))
             if self.status == LOSE:
+                # При проигрыше умножает ставку на -1
                 self.number_chips = list(map(lambda x: x*-1, self.number_chips))
-        self.number_chips = None
         self.bet = None
         self.status = None
+        self.input_bet.value = ''
 
     def event(self, event):
         self.app.event(event)

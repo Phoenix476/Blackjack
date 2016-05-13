@@ -19,9 +19,12 @@ def new_game(stat):
     # 1 - выигрышь, 0 - проигрышь
     bets.status = stat
     bets.change_count_chips()
-    if bets.status is not None:
+    if bets.number_chips is not None:
         chips.number_chips = list(map(lambda x, y: x+y, chips.number_chips, bets.number_chips))
-        chips.update()
+    chips.update()
+    bets.number_chips = None
+    chips.change_bankroll()
+    bets.bankroll = chips.bankroll
     # Начинает новую раздачу
     player.clean_hand()
     dealer.clean_hand()
@@ -61,14 +64,16 @@ while True:
         if e.type == pygame.QUIT:
             sys.exit()
         if e.type == pygame.KEYDOWN:  # Событие "Клавиша нажата"
-            print('Key Down')
+            pass
+            # print('Key Down')
         if e.type == pygame.MOUSEBUTTONUP and e.button == 1:
             mX, mY = pygame.mouse.get_pos()
-            print(mX, mY)
+            # print(mX, mY)
         choice.event(e)
         bets.event(e)
-        player.event(e)
-        dealer.event(e)
+        if bets.bet:
+            player.event(e)
+            dealer.event(e)
         status.event(e)
 
     screen.fill((1, 50, 32))
