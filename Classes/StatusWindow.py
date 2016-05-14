@@ -46,9 +46,9 @@ class StatusWindow:
 
     @property
     def text_continue(self):
-        dx = 105
+        dx = 110
         dy = 10
-        return Text(16, 'Press click to continue game',
+        return Text(16, 'Please click to continue game',
                     (self.rect.center[0] - dx, self.rect.center[1] + dy),
                     color_surface=(106, 90, 205))
 
