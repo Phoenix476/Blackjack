@@ -11,11 +11,12 @@ from Classes.StatusWindow import StatusWindow
 from Classes.BetForm import BetForm
 
 
-def new_game(stat):
-    # status.set_status(stat)
-    # status.render(screen)
+def end_game(stat):
+    global window
     clock = pygame.time.Clock()
     clock.tick(0.5)
+    window = StatusWindow(new_game)
+    window.set_status(stat)
     # 1 - выигрышь, 0 - проигрышь
     bets.status = stat
     bets.change_bet()
@@ -27,11 +28,16 @@ def new_game(stat):
     # chips.change_bankroll()
     bets.bankroll = chips.bankroll
     bets.bet = None
+
+
+def new_game():
+    global window
     # Начинает новую раздачу
     player.clean_hand()
     dealer.clean_hand()
     deck.new_deck()
     player.add_card(deck)
+    window = None
 
 pygame.init()
 pygame.font.init()
@@ -57,7 +63,7 @@ dealer.set_deck(deck)
 chips = ChipsWindow(bankroll)
 choice = ChoiceForm(screen)
 bets = BetForm(screen, bankroll)
-status = StatusWindow(screen)
+window = None
 
 player.add_card(deck)
 
@@ -71,7 +77,8 @@ while True:
             # Пока игрок не сделал ставку, карты при нажатии кнопки не будут раздаваться
             player.event(e)
             dealer.event(e)
-        status.event(e)
+        if window:
+            window.event(e)
 
     screen.fill((1, 50, 32))
     player.render(screen)
@@ -80,31 +87,33 @@ while True:
     chips.render(screen)
     bets.paint()
     choice.paint()
+    if window:
+        window.render(screen)
 
     pygame.display.flip()
 
     if player.get_score() == 21:
         # Если у игрока блэк-джек (21 очко) - он выигрывает
-        new_game(1)
+        end_game(1)
     if player.get_score() > 21:
         # Если у игрока перебор - он проигрывает
-        new_game(0)
+        end_game(0)
     # if player.hand.cards[0].get_rank() == 'a' and player.hand.cards[1].get_rank() == 'a':
     #     # Если у игрока первые две карты - тузы, он автоматически выигрывает
-    #     new_game(1)
+    #     end_game(1)
     if dealer.get_score() >= 17:
         if dealer.get_score() > 21:
             # Если у дилера перебор - игрок выигрывает
-            new_game(1)
+            end_game(1)
         elif dealer.get_score() == 21:
             # Если у дилера блэк-джек (21 очко) - игрок проигрывает
-            new_game(0)
+            end_game(0)
         elif dealer.get_score() > player.get_score():
             # Если у дилера больше очков, чем у игрока - игрок проигрывает
-            new_game(0)
+            end_game(0)
         elif dealer.get_score() == player.get_score():
             # Если 'ровно' - игрок проигрывает
-            new_game(0)
+            end_game(0)
         elif dealer.get_score() < player.get_score():
             # Если у дилера меньше очков, чем у игрока - игрок выигрывает
-            new_game(1)
+            end_game(1)
