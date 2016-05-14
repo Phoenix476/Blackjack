@@ -15,16 +15,18 @@ def new_game(stat):
     # status.set_status(stat)
     # status.render(screen)
     clock = pygame.time.Clock()
-    clock.tick(3)
+    clock.tick(0.5)
     # 1 - выигрышь, 0 - проигрышь
     bets.status = stat
-    bets.change_count_chips()
-    if bets.number_chips is not None:
-        chips.number_chips = list(map(lambda x, y: x+y, chips.number_chips, bets.number_chips))
+    bets.change_bet()
+    if bets.bet is not None:
+        # chips.number_chips = list(map(lambda x, y: x+y, chips.number_chips, bets.number_chips))
+        chips.bankroll += bets.bet
     chips.update()
-    bets.number_chips = None
-    chips.change_bankroll()
+    # bets.number_chips = None
+    # chips.change_bankroll()
     bets.bankroll = chips.bankroll
+    bets.bet = None
     # Начинает новую раздачу
     player.clean_hand()
     dealer.clean_hand()

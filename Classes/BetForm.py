@@ -16,7 +16,7 @@ class BetForm:
         self.app = app = gui.App()
         self.bet = 0
         self.bankroll = bankroll
-        self.number_chips = None
+        # self.number_chips = None
         self.status = None
 
         button_bet = gui.Button('Put')
@@ -49,24 +49,28 @@ class BetForm:
                 return
             if self.bet == 0:
                 print('Сделайте ставку')
-            self.number_chips = list(parse_on_chips(self.bet))
+            # self.number_chips = list(parse_on_chips(self.bet))
             self.status = BET_MADE
-        # else:
-        #     print('Ставка сделана, завершите игру, чтобы сделать новую стаку')
 
-    def change_count_chips(self):
-        if self.number_chips is not None:
+    def change_bet(self):
+        if self.bet is not None:
             if self.status == WIN:
                 # При выиграше удваивает ставку
-                self.number_chips = list(map(lambda x: x*2, self.number_chips))
+                # self.number_chips = list(map(lambda x: x*2, self.number_chips))
+                self.bet *= 2
             if self.status == LOSE:
                 # При проигрыше умножает ставку на -1
-                self.number_chips = list(map(lambda x: x*-1, self.number_chips))
-        self.bet = None
+                # self.number_chips = list(map(lambda x: x*-1, self.number_chips))
+                self.bet *= -1
+        # self.bet = None
         self.status = None
         self.input_bet.value = ''
 
     def event(self, event):
+        if self.bankroll == 0:
+            print('Игра окончена, кончились деньги')
+            new_Event = pygame.event.Event(QUIT)
+            pygame.event.post(new_Event)
         self.app.event(event)
 
     def paint(self):
