@@ -65,15 +65,10 @@ while True:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             sys.exit()
-        if e.type == pygame.KEYDOWN:  # Событие "Клавиша нажата"
-            pass
-            # print('Key Down')
-        if e.type == pygame.MOUSEBUTTONUP and e.button == 1:
-            mX, mY = pygame.mouse.get_pos()
-            # print(mX, mY)
         choice.event(e)
         bets.event(e)
         if bets.bet:
+            # Пока игрок не сделал ставку, карты при нажатии кнопки не будут раздаваться
             player.event(e)
             dealer.event(e)
         status.event(e)
@@ -89,17 +84,27 @@ while True:
     pygame.display.flip()
 
     if player.get_score() == 21:
+        # Если у игрока блэк-джек (21 очко) - он выигрывает
         new_game(1)
     if player.get_score() > 21:
+        # Если у игрока перебор - он проигрывает
         new_game(0)
+    # if player.hand.cards[0].get_rank() == 'a' and player.hand.cards[1].get_rank() == 'a':
+    #     # Если у игрока первые две карты - тузы, он автоматически выигрывает
+    #     new_game(1)
     if dealer.get_score() >= 17:
         if dealer.get_score() > 21:
+            # Если у дилера перебор - игрок выигрывает
             new_game(1)
         elif dealer.get_score() == 21:
+            # Если у дилера блэк-джек (21 очко) - игрок проигрывает
             new_game(0)
         elif dealer.get_score() > player.get_score():
+            # Если у дилера больше очков, чем у игрока - игрок проигрывает
             new_game(0)
         elif dealer.get_score() == player.get_score():
+            # Если 'ровно' - игрок проигрывает
             new_game(0)
         elif dealer.get_score() < player.get_score():
+            # Если у дилера меньше очков, чем у игрока - игрок выигрывает
             new_game(1)
