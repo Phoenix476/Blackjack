@@ -28,3 +28,7 @@ class Hand(object):
         for card in self.cards:
             card[0].render(screen, card[1])
 
+    @property
+    def get_cards(self):
+        return list([card[0] for card in self.cards])
+

@@ -12,7 +12,7 @@ class BetForm:
     # Окно для ввода ставок
 
     def __init__(self, screen, bankroll=2000):
-        self.rect = pygame.Rect((10, 520, 350, 50))
+        self.rect = pygame.Rect((10, 520, 360, 50))
         self.app = app = gui.App()
         self.bet = 0
         self.bankroll = bankroll

@@ -67,6 +67,7 @@ window = None
 
 player.add_card(deck)
 
+
 while True:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
@@ -98,9 +99,13 @@ while True:
     if player.get_score() > 21:
         # Если у игрока перебор - он проигрывает
         end_game(0)
-    # if player.hand.cards[0].get_rank() == 'a' and player.hand.cards[1].get_rank() == 'a':
-    #     # Если у игрока первые две карты - тузы, он автоматически выигрывает
-    #     end_game(1)
+    if player.hand.get_cards[0].get_rank() == 'a':
+        try:
+            if player.hand.get_cards[1].get_rank() == 'a':
+                # Если у игрока первые две карты - тузы, он автоматически выигрывает
+                end_game(1)
+        except IndexError:
+            pass
     if dealer.get_score() >= 17:
         if dealer.get_score() > 21:
             # Если у дилера перебор - игрок выигрывает
